@@ -1,29 +1,55 @@
-// Orientation detection
-function getOrientation() {
-  const angle = window.orientation || window.screen.orientation.angle;
-  const type = window.screen.orientation.type;
+// ---------------- Orientation Detection ----------------
+let currentMode = "portrait-up";
 
-  if (type.includes("portrait") && angle === 0) return "portrait-up";  
-  if (type.includes("portrait") && angle === 180) return "portrait-down";  
-  if (type.includes("landscape") && (angle === 90 || angle === -90)) return "landscape-right";  
-  if (type.includes("landscape") && (angle === 270 || angle === -270)) return "landscape-left";  
-  return "unknown";
-}
-
+// Show feature based on mode
 function showFeature(mode) {
+  currentMode = mode;
   document.querySelectorAll(".feature").forEach(el => el.classList.remove("active"));
 
-  if (mode === "portrait-up") document.getElementById("alarm").classList.add("active");
-  else if (mode === "landscape-right") document.getElementById("stopwatch").classList.add("active");
-  else if (mode === "portrait-down") document.getElementById("timer").classList.add("active");
-  else if (mode === "landscape-left") {
+  if (mode === "portrait-up") {
+    document.getElementById("alarm").classList.add("active");
+  } else if (mode === "portrait-down") {
+    document.getElementById("timer").classList.add("active");
+  } else if (mode === "landscape-right") {
+    document.getElementById("stopwatch").classList.add("active");
+  } else if (mode === "landscape-left") {
     document.getElementById("weather").classList.add("active");
     getWeather();
   }
 }
 
-window.addEventListener("orientationchange", () => {
-  showFeature(getOrientation());
+// Toggle button (for devices with only 2 orientations)
+function toggleFeature() {
+  if (currentMode === "portrait-up") {
+    document.getElementById("alarm").classList.toggle("active");
+    document.getElementById("timer").classList.toggle("active");
+  } else if (currentMode.startsWith("landscape")) {
+    document.getElementById("stopwatch").classList.toggle("active");
+    document.getElementById("weather").classList.toggle("active");
+    if (document.getElementById("weather").classList.contains("active")) getWeather();
+  }
+}
+
+// DeviceOrientation API
+window.addEventListener("deviceorientation", (event) => {
+  const beta = event.beta;   // front-back tilt
+  const gamma = event.gamma; // left-right tilt
+
+  let mode = "unknown";
+
+  if (beta > 120 || beta < -120) {
+    mode = "portrait-down"; // upside down
+  } else if (beta > -45 && beta < 45) {
+    mode = "portrait-up"; // upright
+  } else if (gamma > 45) {
+    mode = "landscape-right";
+  } else if (gamma < -45) {
+    mode = "landscape-left";
+  }
+
+  if (mode !== "unknown") {
+    showFeature(mode);
+  }
 });
 
 // ---------------- Alarm Clock ----------------
@@ -115,5 +141,5 @@ async function getWeather() {
   }
 }
 
-// Show initial feature
-showFeature(getOrientation());
+// ---------------- Initialize ----------------
+showFeature("portrait-up"); // default
