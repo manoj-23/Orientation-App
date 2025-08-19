@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orientation App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1 id="title">Orientation App</h1>
+
+  <!-- Features -->
+  <div id="alarm" class="feature hidden">
+    <h2>⏰ Alarm Clock</h2>
+    <p id="clock">--:--:--</p>
+    <input type="time" id="alarmTime">
+    <button onclick="setAlarm()">Set Alarm</button>
+    <p id="alarmStatus"></p>
+  </div>
+
+  <div id="stopwatch" class="feature hidden">
+    <h2>⏱ Stopwatch</h2>
+    <p id="stopwatchDisplay">00:00:00</p>
+    <button onclick="startStopwatch()">Start</button>
+    <button onclick="stopStopwatch()">Stop</button>
+    <button onclick="resetStopwatch()">Reset</button>
+  </div>
+
+  <div id="timer" class="feature hidden">
+    <h2>⏲ Timer</h2>
+    <input type="number" id="timerInput" placeholder="Seconds">
+    <button onclick="startTimer()">Start</button>
+    <p id="timerDisplay">00</p>
+  </div>
+
+  <div id="weather" class="feature hidden">
+    <h2>🌦 Weather</h2>
+    <p id="weatherInfo">Loading...</p>
+    <img id="weatherIcon" alt="Weather Icon">
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
